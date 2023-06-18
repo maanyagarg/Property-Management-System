@@ -1,0 +1,46 @@
+create sequence s
+start with 1 
+increment by 1
+maxvalue 3
+nocycle nocache;
+create table f(roll int primary key, name varchar(5))
+insert into f values(s.nextval,'ABC')
+insert into f values(s.nextval,'DEF')
+insert into f values(s.nextval,'GHI')
+insert into f values(s.nextval,'PQR')
+select * from f
+
+create index I on f(name)
+
+create view v1 as select name from f where roll>1
+insert into v1 values(4,'JKL')
+select * from v1
+create table g(id int primary key,n1 varchar(5), marks int)
+insert into g values(1,'BCD',89)
+insert into g values(2,'EFG',79)
+create view v2 as select * from f,g where f.roll=g.id
+create or replace view v2 as select * from f inner join g on f.roll=g.id 
+select * from v2
+select * from v1,g
+select * from v1,v2
+create view v3 as select roll from f 
+insert into v3 values(5)
+select * from f
+
+
+create table foo(id number primary key, data varchar2(100))
+create table foo2(id number primary key, data varchar2(100))
+create sequence foo_seq
+
+create or replace trigger myTrigger
+before insert
+on foo
+for each row
+begin 
+insert into foo2 values(foo_seq.nextval,:new.data);
+end;
+
+insert into foo(data) values('Prerak')
+insert into foo values(8,'Piyush')
+select * from foo
+select * from foo2
